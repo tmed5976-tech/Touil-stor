@@ -27,6 +27,12 @@
         .product-card:hover {
             transform: translateY(-5px);
         }
+        .cart-sidebar {
+            transform: translateX(100%);
+        }
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="text-right">
@@ -199,7 +205,7 @@
                     cartItem.innerHTML = `
                         <img src="${item.imageUrl}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
                         <div class="flex-grow">
-                            <h4 class="font-bold text-gray-800">${item.name}</h4>
+                            <h4 class="font-bold text-lg text-gray-800">${item.name}</h4>
                             <p class="text-gray-600 text-sm">${item.price} ريال</p>
                         </div>
                         <button class="p-2 text-red-500 hover:text-red-700 remove-from-cart-btn" data-index="${index}">
