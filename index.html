@@ -28,10 +28,14 @@
             transform: translateY(-5px);
         }
         .cart-sidebar {
+            transition: transform 0.3s ease-in-out;
             transform: translateX(100%);
         }
         .cart-sidebar.open {
             transform: translateX(0);
+        }
+        .modal {
+            background-color: rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
@@ -90,8 +94,8 @@
     </main>
 
     <!-- Shopping Cart Modal (hidden by default) -->
-    <div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden">
-        <div class="fixed top-0 left-0 h-full w-full md:w-96 bg-white shadow-xl z-50 transform -translate-x-full transition-transform duration-300" id="cart-sidebar">
+    <div id="cart-modal" class="fixed inset-0 modal z-50 hidden">
+        <div class="fixed top-0 left-0 h-full w-full md:w-96 bg-white shadow-xl z-50 cart-sidebar transition-transform duration-300" id="cart-sidebar">
             <div class="p-6 h-full flex flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-bold text-gray-800">عربة التسوق</h3>
@@ -233,12 +237,14 @@
                 renderCart();
                 cartModal.classList.remove('hidden');
                 setTimeout(() => {
-                    cartSidebar.classList.remove('-translate-x-full');
+                    cartSidebar.classList.remove('translate-x-full');
+                    cartSidebar.classList.add('open');
                 }, 10);
             });
             
             closeCartBtn.addEventListener('click', () => {
-                cartSidebar.classList.add('-translate-x-full');
+                cartSidebar.classList.add('translate-x-full');
+                cartSidebar.classList.remove('open');
                 setTimeout(() => {
                     cartModal.classList.add('hidden');
                 }, 300);
@@ -252,6 +258,7 @@
                     if (productToAdd) {
                         cart.push(productToAdd);
                         renderCart();
+                        alert('تمت إضافة المنتج إلى السلة!');
                     }
                 }
             });
@@ -262,6 +269,17 @@
                     const indexToRemove = parseInt(removeBtn.dataset.index);
                     cart.splice(indexToRemove, 1);
                     renderCart();
+                }
+            });
+            
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                if (cart.length > 0) {
+                    alert('جاري التوجه إلى صفحة الدفع. شكراً لشرائك!');
+                    cart = [];
+                    renderCart();
+                    closeCartBtn.click();
+                } else {
+                    alert('عربة التسوق فارغة.');
                 }
             });
         });
