@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر TOUIL.STOR</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- تضمين Tailwind CSS من خلال CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* أنماط مخصصة للصفحة لإضافة خط القاهرة وتحسين المظهر */
         body {
             font-family: 'Cairo', sans-serif;
             background-color: #f7f7f7;
@@ -18,25 +19,23 @@
             max-width: 1200px;
             margin: auto;
         }
+        /* تأثير الانتقال لشريحة البطل (Hero Slider) */
         .hero-slide {
             transition: transform 1s ease-in-out;
         }
+        /* تأثير الانتقال لبطاقات المنتجات عند التحويم */
         .product-card {
             transition: transform 0.3s ease;
         }
         .product-card:hover {
             transform: translateY(-5px);
         }
-        .cart-sidebar {
-            transition: transform 0.3s ease-in-out;
-            transform: translateX(100%);
-        }
-        .cart-sidebar.open {
-            transform: translateX(0);
-        }
-        .modal {
+        /* أنماط خاصة بالنافذة المنبثقة (Modal) */
+        .modal-overlay {
             background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
         }
+        /* تأثير الانتقال بين الصفحات */
         .page-transition {
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -48,7 +47,7 @@
 </head>
 <body class="text-right">
 
-    <!-- Header & Navigation -->
+    <!-- رأس الصفحة وقائمة التنقل -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -57,14 +56,17 @@
             </div>
             <div class="flex items-center gap-4">
                 <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <!-- أيقونة البحث -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </button>
                 <button id="favorites-icon-btn" class="relative p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <!-- أيقونة المفضلة -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                     <span id="favorites-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
                 </button>
                 <div class="relative">
                     <button id="cart-icon-btn" class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                        <!-- أيقونة عربة التسوق -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
                         <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </button>
@@ -76,40 +78,97 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- المحتوى الرئيسي (سيتم تحديثه ديناميكيًا بواسطة JavaScript) -->
     <main id="app-container" class="container mx-auto px-4 py-8 page-transition active">
-        <!-- Content will be injected here by JavaScript -->
+        <!-- المحتوى سيتم إدراجه هنا بواسطة JavaScript -->
     </main>
 
-    <!-- Footer -->
+    <!-- تذييل الصفحة -->
     <footer class="bg-gray-800 text-white py-8 mt-12">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2024 TOUIL.STOR. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
+    <!-- نافذة منبثقة مخصصة للمراسلات والتأكيدات -->
+    <div id="custom-modal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full mx-4 text-center transform transition-transform duration-300 scale-95">
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
+            <p id="modal-message" class="text-gray-600 mb-6"></p>
+            <div id="modal-actions" class="flex justify-center gap-4">
+                <!-- الأزرار سيتم إدراجها هنا ديناميكيًا -->
+            </div>
+        </div>
+    </div>
+
     <script>
+        // مصفوفات البيانات للمنتجات، السلة، المفضلة والتقييمات
         const PRODUCTS = [
-            { id: 1, name: 'فستان سهرة أنيق', price: 320, description: 'فستان سهرة بتصميم حديث، مثالي للمناسبات الخاصة والحفلات. مصنوع من قماش فاخر مع تفاصيل دقيقة.', imageUrl: 'https://images.unsplash.com/photo-1543265886-c43093c8d197?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max', category: 'فساتين', colors: ['أسود', 'أحمر', 'ذهبي'], sizes: ['S', 'M', 'L'] },
-            { id: 2, name: 'قميص رجالي قطني', price: 120, description: 'قميص رجالي كلاسيكي مصنوع من القطن الناعم، يوفر الراحة والأناقة في آن واحد.', imageUrl: 'https://images.unsplash.com/photo-1598460670355-0814407b1a03?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max', category: 'قمصان', colors: ['أبيض', 'أزرق', 'رمادي'], sizes: ['S', 'M', 'L', 'XL'] },
-            { id: 3, name: 'جاكيت جينز عصري', price: 280, description: 'جاكيت جينز بتصميم عصري يناسب الإطلالات اليومية. مصنوع من الدنيم عالي الجودة لمتانة تدوم طويلاً.', imageUrl: 'https://images.unsplash.com/photo-1591047120610-c117e3f815e1?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max', category: 'جاكيتات', colors: ['أزرق داكن', 'أزرق فاتح'], sizes: ['S', 'M', 'L', 'XL'] },
-            { id: 4, name: 'تنورة ميدي صوف', price: 180, description: 'تنورة ميدي دافئة ومريحة، مثالية لفصل الشتاء. يمكن تنسيقها بسهولة مع العديد من القطع العلوية.', imageUrl: 'https://images.unsplash.com/photo-1631548694086-4e5b22b821a3?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max', category: 'تنانير', colors: ['بيج', 'أسود', 'بني'], sizes: ['S', 'M', 'L'] },
+            // المنتج الذي طلبته
+            {
+                id: 1,
+                name: 'قميص قطني للرجال',
+                price: 120,
+                description: 'قميص قطني للرجال متوفر بجميع الاحجام',
+                imageUrl: 'https://i.postimg.cc/CKsJt0P2/Gemini-Generated-Image-yh55qnyh55qnyh55.png',
+                category: 'ملابس رجالية',
+                colors: ['أبيض', 'أسود', 'رمادي'],
+                sizes: ['S', 'M', 'L', 'XL', 'XXL']
+            }
         ];
         
         let cart = [];
         let favorites = [];
-        let reviews = [
-            { productId: 1, user: 'أحمد', rating: 5, comment: 'فستان جميل جداً، الجودة رائعة والسعر مناسب.' },
-            { productId: 1, user: 'فاطمة', rating: 4, comment: 'تصميم أنيق ومريح، أنصح به بشدة.' },
-            { productId: 2, user: 'محمد', rating: 5, comment: 'قميص ممتاز، الخامة ناعمة جداً.' },
-        ];
+        let reviews = [];
         let currentPage = 'home';
         let selectedProductId = null;
         let selectedSize = null;
         let selectedColor = null;
 
         const appContainer = document.getElementById('app-container');
+        const modal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalActions = document.getElementById('modal-actions');
         
+        // --- دوال النافذة المنبثقة (Modal) ---
+        // تستخدم لعرض رسائل للمستخدم بدلاً من `alert()`
+        function showModal(title, message, isConfirm = false, onConfirm = null) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalActions.innerHTML = '';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = 'إغلاق';
+            closeBtn.className = 'px-6 py-3 rounded-full text-white bg-slate-900 hover:bg-slate-700 transition-colors shadow-md';
+            closeBtn.onclick = () => hideModal();
+            modalActions.appendChild(closeBtn);
+
+            if (isConfirm) {
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = 'نعم';
+                confirmBtn.className = 'px-6 py-3 rounded-full text-white bg-green-500 hover:bg-green-600 transition-colors shadow-md';
+                confirmBtn.onclick = () => {
+                    hideModal();
+                    if (onConfirm) onConfirm();
+                };
+                modalActions.insertBefore(confirmBtn, closeBtn);
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // لمنع التمرير أثناء عرض النافذة
+        }
+
+        // إخفاء النافذة المنبثقة
+        function hideModal() {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto'; // السماح بالتمرير مرة أخرى
+        }
+
+        // --- دوال العرض الرئيسية ---
+        // تعرض الصفحة الصحيحة بناءً على حالة `currentPage`
         function renderApp() {
             appContainer.classList.remove('active');
             setTimeout(() => {
@@ -129,11 +188,15 @@
                     case 'contact':
                         renderContactPage();
                         break;
+                    default:
+                        renderHomePage();
                 }
                 appContainer.classList.add('active');
+                updateCounts(); // تحديث أعداد السلة والمفضلة بعد كل عرض
             }, 300);
         }
-
+        
+        // يعرض محتوى الصفحة الرئيسية
         function renderHomePage() {
             appContainer.innerHTML = `
                 <section class="relative overflow-hidden rounded-2xl mb-12 shadow-lg h-96">
@@ -141,7 +204,7 @@
                     <div class="absolute inset-0 z-10 flex flex-col items-center justify-center text-white text-center p-6 md:p-12">
                         <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">أحدث العروض</h1>
                         <p class="text-lg md:text-xl mb-6 max-w-lg">اكتشف مجموعتنا الجديدة واستفد من عروض خاصة وخصومات لا مثيل لها.</p>
-                        <button class="bg-white text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors shadow-lg">تسوق الآن</button>
+                        <button class="bg-white text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors shadow-lg view-products-btn">تسوق الآن</button>
                     </div>
                     <div id="slider-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20"></div>
                 </section>
@@ -154,18 +217,20 @@
             renderProducts();
         }
 
+        // يعرض صفحة تفاصيل المنتج
         function renderProductDetailPage(productId) {
             const product = PRODUCTS.find(p => p.id === productId);
             if (!product) {
-                appContainer.innerHTML = `<p class="text-center text-red-500">المنتج غير موجود</p>`;
+                showModal('خطأ', 'المنتج غير موجود.');
+                currentPage = 'home';
+                renderApp();
                 return;
             }
             const productReviews = reviews.filter(r => r.productId === product.id);
-
             const isFavorite = favorites.some(fav => fav.id === product.id);
-            selectedSize = product.sizes.length > 0 ? product.sizes[0] : null;
-            selectedColor = product.colors.length > 0 ? product.colors[0] : null;
-
+            selectedSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : null;
+            selectedColor = product.colors && product.colors.length > 0 ? product.colors[0] : null;
+        
             appContainer.innerHTML = `
                 <button id="back-to-home-btn" class="flex items-center text-gray-600 hover:text-gray-800 transition-colors mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left ml-2"><path d="m15 18-6-6 6-6"/></svg>
@@ -177,7 +242,7 @@
                     </div>
                     <div class="lg:w-1/2">
                         <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">${product.name}</h1>
-                        <p class="text-2xl font-bold text-gray-900 mb-6">${product.price} ريال</p>
+                        <p class="text-2xl font-bold text-gray-900 mb-6">${product.price} درهم</p>
                         <p class="text-gray-600 mb-8 leading-relaxed text-lg">${product.description}</p>
                         
                         <div class="mb-8">
@@ -208,7 +273,6 @@
                                 </div>
                             ` : ''}
                         </div>
-
                         <div class="flex items-center gap-4">
                             <button id="add-to-cart-btn" class="flex-grow bg-slate-900 text-white font-bold py-4 px-8 rounded-full hover:bg-slate-700 transition-colors shadow-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart inline-block ml-2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
@@ -257,9 +321,10 @@
             `;
         }
 
+        // يعرض صفحة عربة التسوق
         function renderCartPage() {
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-
+        
             appContainer.innerHTML = `
                 <button id="back-to-home-btn" class="flex items-center text-gray-600 hover:text-gray-800 transition-colors mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left ml-2"><path d="m15 18-6-6 6-6"/></svg>
@@ -272,14 +337,14 @@
                             <div class="flex items-center gap-6 border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
                                 <img src="${item.imageUrl}" alt="${item.name}" class="w-24 h-24 object-cover rounded-md" />
                                 <div class="flex-grow">
-                                  <h4 class="font-bold text-lg text-gray-800">${item.name}</h4>
-                                  <p class="text-gray-600 text-sm">${item.description.substring(0, 50)}...</p>
-                                  ${item.selectedSize ? `<p class="text-sm font-semibold text-gray-500 mt-1">الحجم: ${item.selectedSize}</p>` : ''}
-                                  ${item.selectedColor ? `<p class="text-sm font-semibold text-gray-500">اللون: ${item.selectedColor}</p>` : ''}
-                                  <p class="text-xl font-bold text-gray-900 mt-2">${item.price} ريال</p>
+                                    <h4 class="font-bold text-lg text-gray-800">${item.name}</h4>
+                                    <p class="text-gray-600 text-sm">${item.description.substring(0, 50)}...</p>
+                                    ${item.selectedSize ? `<p class="text-sm font-semibold text-gray-500 mt-1">الحجم: ${item.selectedSize}</p>` : ''}
+                                    ${item.selectedColor ? `<p class="text-sm font-semibold text-gray-500">اللون: ${item.selectedColor}</p>` : ''}
+                                    <p class="text-xl font-bold text-gray-900 mt-2">${item.price} درهم</p>
                                 </div>
                                 <button class="p-3 text-red-500 hover:text-red-700 transition-colors remove-from-cart-btn" data-index="${index}">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                 </button>
                             </div>
                         `).join('')}
@@ -287,7 +352,7 @@
                     <div class="border-t border-gray-200 mt-8 pt-6">
                         <div class="flex justify-between items-center text-2xl font-bold text-gray-800 mb-4">
                             <span>الإجمالي:</span>
-                            <span>${total} ريال</span>
+                            <span>${total} درهم</span>
                         </div>
                         <button id="checkout-btn" class="w-full bg-slate-900 text-white font-bold py-4 rounded-full hover:bg-slate-700 transition-colors shadow-lg">
                             الدفع الآن
@@ -297,6 +362,7 @@
             `;
         }
 
+        // يعرض صفحة المفضلة
         function renderFavoritesPage() {
             appContainer.innerHTML = `
                 <button id="back-to-home-btn" class="flex items-center text-gray-600 hover:text-gray-800 transition-colors mb-6">
@@ -310,12 +376,12 @@
                             <div class="flex items-center gap-6 border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
                                 <img src="${item.imageUrl}" alt="${item.name}" class="w-24 h-24 object-cover rounded-md" />
                                 <div class="flex-grow">
-                                  <h4 class="font-bold text-lg text-gray-800">${item.name}</h4>
-                                  <p class="text-gray-600 text-sm">${item.description.substring(0, 50)}...</p>
-                                  <p class="text-xl font-bold text-gray-900 mt-2">${item.price} ريال</p>
+                                    <h4 class="font-bold text-lg text-gray-800">${item.name}</h4>
+                                    <p class="text-gray-600 text-sm">${item.description.substring(0, 50)}...</p>
+                                    <p class="text-xl font-bold text-gray-900 mt-2">${item.price} درهم</p>
                                 </div>
                                 <button class="p-3 text-red-500 hover:text-red-700 transition-colors remove-from-favorites-btn" data-product-id="${item.id}">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                                 </button>
                             </div>
                         `).join('')}
@@ -324,6 +390,7 @@
             `;
         }
         
+        // يعرض صفحة "اتصل بنا"
         function renderContactPage() {
             appContainer.innerHTML = `
                 <button id="back-to-home-btn" class="flex items-center text-gray-600 hover:text-gray-800 transition-colors mb-6">
@@ -345,17 +412,21 @@
                     </form>
                 </div>
             `;
+            // استخدام نافذة منبثقة مخصصة بدلاً من `alert()` عند إرسال النموذج
             document.getElementById('contact-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = document.getElementById('contact-name').value;
                 const email = document.getElementById('contact-email').value;
                 const message = document.getElementById('contact-message').value;
                 
-                window.location.href = `mailto:tmed5976@gmail.com?subject=رسالة من ${name}&body=${message}`;
-                alert('تم فتح بريدك الإلكتروني لإرسال الرسالة.');
+                showModal(
+                    'تم إرسال الرسالة',
+                    'شكراً لك! سيتم فتح تطبيق بريدك الإلكتروني لإرسال رسالتك.'
+                );
             });
         }
-
+        
+        // تحديث أعداد المنتجات في السلة والمفضلة
         function updateCounts() {
             const cartCountSpan = document.getElementById('cart-count');
             const favoritesCountSpan = document.getElementById('favorites-count');
@@ -363,7 +434,9 @@
             if (favoritesCountSpan) favoritesCountSpan.textContent = favorites.length;
         }
 
+        // --- معالج الأحداث الرئيسي (يستمع لجميع النقرات) ---
         document.addEventListener('click', (e) => {
+            // معالجة التنقل بين الصفحات
             if (e.target.closest('.view-details-btn')) {
                 const productId = parseInt(e.target.closest('.view-details-btn').dataset.productId);
                 selectedProductId = productId;
@@ -384,30 +457,34 @@
             } else if (e.target.closest('#back-to-home-btn')) {
                 currentPage = 'home';
                 renderApp();
-            } else if (e.target.closest('.remove-from-cart-btn')) {
+            } 
+            // معالجة إجراءات السلة والمفضلة
+            else if (e.target.closest('.remove-from-cart-btn')) {
                 const indexToRemove = parseInt(e.target.closest('.remove-from-cart-btn').dataset.index);
                 cart.splice(indexToRemove, 1);
+                showModal('تم الحذف', 'تم حذف المنتج من السلة.');
                 renderApp();
-                updateCounts();
             } else if (e.target.closest('.remove-from-favorites-btn')) {
                 const productIdToRemove = parseInt(e.target.closest('.remove-from-favorites-btn').dataset.productId);
                 favorites = favorites.filter(fav => fav.id !== productIdToRemove);
+                showModal('تم الحذف', 'تم حذف المنتج من المفضلة.');
                 renderApp();
-                updateCounts();
             } else if (e.target.closest('#checkout-btn')) {
                 if (cart.length > 0) {
-                    alert('جاري التوجه إلى صفحة الدفع. شكراً لشرائك!');
-                    cart = [];
-                    updateCounts();
-                    currentPage = 'home';
-                    renderApp();
+                    showModal('تأكيد الدفع', 'هل أنت متأكد من المتابعة للدفع؟', true, () => {
+                        showModal('تم الشراء بنجاح', 'شكراً لشرائك! سيتم شحن طلبك قريباً.', false);
+                        cart = [];
+                        currentPage = 'home';
+                        renderApp();
+                    });
                 } else {
-                    alert('عربة التسوق فارغة.');
+                    showModal('عربة فارغة', 'عربة التسوق فارغة، يرجى إضافة منتجات أولاً.');
                 }
             } else if (e.target.closest('#add-to-cart-btn')) {
                 const product = PRODUCTS.find(p => p.id === selectedProductId);
+                if (!product) return;
                 
-                let productToAdd = {...product};
+                let productToAdd = { ...product };
 
                 const sizeButtons = document.querySelectorAll('#size-options button');
                 sizeButtons.forEach(btn => {
@@ -423,29 +500,30 @@
                     }
                 });
                 
-                if (product.sizes.length > 0 && !productToAdd.selectedSize) {
-                    alert('الرجاء اختيار الحجم.');
+                if (product.sizes && product.sizes.length > 0 && !productToAdd.selectedSize) {
+                    showModal('خطأ', 'الرجاء اختيار الحجم.');
                     return;
                 }
-                if (product.colors.length > 0 && !productToAdd.selectedColor) {
-                    alert('الرجاء اختيار اللون.');
+                if (product.colors && product.colors.length > 0 && !productToAdd.selectedColor) {
+                    showModal('خطأ', 'الرجاء اختيار اللون.');
                     return;
                 }
 
                 cart.push(productToAdd);
-                alert('تمت إضافة المنتج إلى السلة!');
+                showModal('تمت الإضافة', 'تمت إضافة المنتج إلى السلة بنجاح.');
                 updateCounts();
             } else if (e.target.closest('#favorite-btn')) {
                 const product = PRODUCTS.find(p => p.id === selectedProductId);
                 const isFavorite = favorites.some(fav => fav.id === product.id);
                 if (isFavorite) {
                     favorites = favorites.filter(fav => fav.id !== product.id);
-                    alert('تمت إزالة المنتج من المفضلة!');
+                    showModal('تم الحذف', 'تمت إزالة المنتج من المفضلة.');
                 } else {
                     favorites.push(product);
-                    alert('تمت إضافة المنتج إلى المفضلة!');
+                    showModal('تمت الإضافة', 'تمت إضافة المنتج إلى المفضلة.');
                 }
                 updateCounts();
+                renderApp();
             } else if (e.target.closest('#review-form button[type="submit"]')) {
                 const productId = selectedProductId;
                 const comment = document.getElementById('review-comment').value;
@@ -457,10 +535,10 @@
                 });
                 if (rating > 0 && comment.trim() !== '') {
                     reviews.push({ productId: productId, user: 'زائر', rating: rating, comment: comment });
-                    alert('تم إرسال تقييمك بنجاح!');
+                    showModal('شكراً لك', 'تم إرسال تقييمك بنجاح!');
                     renderProductDetailPage(productId);
                 } else {
-                    alert('الرجاء اختيار تقييم وكتابة تعليق.');
+                    showModal('خطأ', 'الرجاء اختيار تقييم وكتابة تعليق.');
                 }
             } else if (e.target.closest('#size-options .size-btn')) {
                 const sizeButtons = document.querySelectorAll('.size-btn');
@@ -490,14 +568,18 @@
                         }
                     });
                 }
+            } else if (e.target.closest('.view-products-btn')) {
+                window.scrollTo({ top: document.getElementById('product-list').offsetTop - 200, behavior: 'smooth' });
             }
         });
         
+        // عند تحميل الصفحة، ابدأ بعرض التطبيق
         window.onload = () => {
             renderApp();
             updateCounts();
         };
 
+        // يعرض قسم الشرائح المتحركة في الصفحة الرئيسية
         function renderHeroSection() {
             const slider = document.getElementById('hero-slider');
             const dotsContainer = document.getElementById('slider-dots');
@@ -535,6 +617,7 @@
             }
         }
         
+        // يعرض قائمة المنتجات
         function renderProducts() {
             const productList = document.getElementById('product-list');
             if (productList) {
@@ -547,7 +630,7 @@
                         <h3 class="text-lg font-bold text-gray-800 mb-1">${product.name}</h3>
                         <p class="text-sm text-gray-600 mb-3">${product.description.substring(0, 50)}...</p>
                         <div class="flex items-center justify-center mb-4">
-                            <span class="text-2xl font-extrabold text-gray-900">${product.price} ريال</span>
+                            <span class="text-2xl font-extrabold text-gray-900">${product.price} درهم</span>
                         </div>
                         <button class="w-full bg-slate-900 text-white font-bold py-3 px-6 rounded-full hover:bg-slate-700 transition-colors shadow-md view-details-btn" data-product-id="${product.id}">
                             عرض التفاصيل
@@ -555,14 +638,10 @@
                     `;
                     productList.appendChild(productCard);
                 });
+                if (PRODUCTS.length === 0) {
+                    productList.innerHTML = `<p class="text-gray-500 text-center col-span-full">لا توجد منتجات حاليًا. يرجى إضافة منتجات جديدة.</p>`;
+                }
             }
-        }
-        
-        function updateCounts() {
-            const cartCountSpan = document.getElementById('cart-count');
-            const favoritesCountSpan = document.getElementById('favorites-count');
-            if (cartCountSpan) cartCountSpan.textContent = cart.length;
-            if (favoritesCountSpan) favoritesCountSpan.textContent = favorites.length;
         }
     </script>
 </body>
